@@ -6,7 +6,7 @@ public class Entity : MonoBehaviour
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
 
-    protected StateMachine statemachine;
+    protected StateMachine stateMachine;
    
 
     protected bool facingRight = true;
@@ -27,7 +27,7 @@ public class Entity : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
 
-        statemachine = new StateMachine();
+        stateMachine = new StateMachine();
        
     }
 
@@ -39,12 +39,11 @@ public class Entity : MonoBehaviour
     protected virtual void Update()
     {
         HandleCollisionDetection();
-        statemachine.currentState.Update();
+        stateMachine.currentState.Update();
     }
 
-    public void callAnimationTrigger()
-    {
-        statemachine.currentState.CallAnimationTrigger();
+public void CallAnimationTrigger(){
+        stateMachine.currentState.CallAnimationTrigger();
     }
 
     public void SetVelocity(float xVelocity, float yVelocity)
