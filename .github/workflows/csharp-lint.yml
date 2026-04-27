@@ -1,0 +1,32 @@
+name: C# Code Format Check
+
+# 触发条件：当代码推送到 main 或 develop 分支，或者提 PR 时触发
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  lint:
+    name: Check C# Code Formatting
+    runs-on: ubuntu-latest # 使用 GitHub 提供的免费 Ubuntu 服务器
+
+    steps:
+      # 第一步：把你们仓库的代码拉取到服务器上
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 第二步：安装 .NET 环境，用来解析和检查 C# 代码
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '7.0.x' 
+
+      # 第三步：执行代码规范检查
+      - name: Run C# Linter
+        run: |
+          echo "开始检查 Unity 脚本的代码规范..."
+          # --verify-no-changes 表示如果格式不对就报错拦截，不自动修改
+          # --include 限制只检查 Assets 文件夹下的 .cs 脚本文件
+          dotnet format whitespace --verify-no-changes --include ./Assets/**/*.cs
