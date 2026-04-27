@@ -29,4 +29,4 @@ jobs:
           echo "开始检查 Unity 脚本的代码规范..."
           # --verify-no-changes 表示如果格式不对就报错拦截，不自动修改
           # --include 限制只检查 Assets 文件夹下的 .cs 脚本文件
-          dotnet format whitespace --verify-no-changes --include ./Assets/**/*.cs
+          dotnet format whitespace --verify-no-changes --include ./UnityProject/Assets/**/*.cs
