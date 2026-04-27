@@ -1,0 +1,70 @@
+# 顶层配置文件，停止向上级目录查找配置
+root = true
+
+# 针对所有文件
+[*]
+indent_style = space
+indent_size = 4
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# 针对所有 C# 脚本文件
+[*.cs]
+# ==========================================
+# 缩进与大括号换行规则
+# ==========================================
+# 强制大括号另起一行 (匹配代码中的 Allman 风格)
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+# switch 语句中的 case 需要缩进
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+
+# ==========================================
+# 局部变量声明偏好
+# ==========================================
+# 偏好显式类型声明，而不是使用 var (匹配代码中大量显式声明如 Vector2, RaycastHit2D)
+csharp_style_var_for_built_in_types = false:silent
+csharp_style_var_when_type_is_apparent = false:silent
+csharp_style_var_elsewhere = false:silent
+
+# ==========================================
+# 表达式主体 (Expression-bodied members)
+# ==========================================
+# 偏好使用代码块而不是 => 箭头函数
+csharp_style_expression_bodied_methods = false:silent
+csharp_style_expression_bodied_constructors = false:silent
+csharp_style_expression_bodied_properties = false:silent
+
+# ==========================================
+# 命名规范约束
+# ==========================================
+# 1. 类、结构体、方法必须使用 PascalCase (大驼峰)
+dotnet_naming_rule.classes_and_methods_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.classes_and_methods_should_be_pascal_case.symbols = classes_and_methods_symbols
+dotnet_naming_rule.classes_and_methods_should_be_pascal_case.style = pascal_case_style
+dotnet_naming_symbols.classes_and_methods_symbols.applicable_kinds = class, struct, method
+dotnet_naming_symbols.classes_and_methods_symbols.applicable_accessibilities = *
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+# 2. 兼容你们项目中的属性命名习惯 (小驼峰 camelCase)
+# 你们代码中使用了 public Animator anim { get; private set; } 这种写法
+# 为了防止 dotnet format 报错拦截，这里允许属性使用小驼峰
+dotnet_naming_rule.properties_should_be_camel_case.severity = none
+dotnet_naming_rule.properties_should_be_camel_case.symbols = properties_symbols
+dotnet_naming_rule.properties_should_be_camel_case.style = camel_case_style
+dotnet_naming_symbols.properties_symbols.applicable_kinds = property
+dotnet_naming_symbols.properties_symbols.applicable_accessibilities = *
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+
+# 3. 接口必须以大写 I 开头 (Unity 常用规范)
+dotnet_naming_rule.interfaces_should_start_with_i.severity = suggestion
+dotnet_naming_rule.interfaces_should_start_with_i.symbols = interface_symbols
+dotnet_naming_rule.interfaces_should_start_with_i.style = starts_with_i_style
+dotnet_naming_symbols.interface_symbols.applicable_kinds = interface
+dotnet_naming_symbols.interface_symbols.applicable_accessibilities = *
+dotnet_naming_style.starts_with_i_style.required_prefix = I
+dotnet_naming_style.starts_with_i_style.capitalization = pascal_case
