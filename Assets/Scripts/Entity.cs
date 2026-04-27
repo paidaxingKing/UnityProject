@@ -42,17 +42,18 @@ public class Entity : MonoBehaviour
         stateMachine.currentState.Update();
     }
 
-public void CallAnimationTrigger(){
+    public void CallAnimationTrigger()
+    {
         stateMachine.currentState.CallAnimationTrigger();
     }
 
-public void SetVelocity(float xVelocity, float yVelocity)
+    public void SetVelocity(float xVelocity, float yVelocity)
     {
         rb.linearVelocity = new Vector2(xVelocity, yVelocity);
         HandleFlip(xVelocity);
     }
 
-private void HandleFlip(float xVelocity)
+    private void HandleFlip(float xVelocity)
     {
         if (xVelocity > 0 && !facingRight)
         {
