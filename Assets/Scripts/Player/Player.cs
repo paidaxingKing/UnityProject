@@ -1,10 +1,11 @@
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditorInternal;
 using UnityEngine;
+using System;
 
 public class Player : Entity
 {
+    public static event Action OnPlayerDeath;
+
     public PlayerInputSet input { get; private set; }
     public Vector2 moveInput { get; private set; }
     // States
@@ -17,6 +18,8 @@ public class Player : Entity
     public Player_DashState dashState { get; private set; }
     public Player_BasicAttackState basicAttackState { get; private set; }
     public Player_JumpAttackState jumpAttackState { get; private set; }
+    public Player_DeadState deadState { get; private set; } 
+    public Player_CounterAttackState counterAttackState { get; private set; }
 
     [Header("Attack Details")]
     public Vector2[] attackVelocity;
@@ -53,6 +56,8 @@ public class Player : Entity
         dashState = new Player_DashState(this, stateMachine, "dash");
         basicAttackState = new Player_BasicAttackState(this, stateMachine, "basicAttack");
         jumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
+        deadState = new Player_DeadState(this, stateMachine, "dead");
+        counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
     }
 
     protected override void Start()
@@ -64,6 +69,51 @@ public class Player : Entity
     protected override void Update()
     {
         base .Update();
+    }
+
+    protected override IEnumerator SlowDownEntityCo(float duration, float slowMultiplier)
+    {
+        float originalMoveSpeed = moveSpeed;
+        float originalJumpForce = jumpForce;
+        float originalAnimSpeed = anim.speed;
+
+        Vector2[] originalAttackVelocity = (Vector2[])attackVelocity.Clone();
+        Vector2 originalJumpAttackVelocity = jumpAttackVelocity;
+        Vector2 originalWallJumpForce = wallJumpForce;
+
+        float speedMultiplier = 1 - slowMultiplier;
+
+        moveSpeed *= speedMultiplier;
+        jumpForce *= speedMultiplier;
+        jumpAttackVelocity *= speedMultiplier;
+        wallJumpForce *= speedMultiplier;
+        anim.speed *= speedMultiplier;
+
+        for (int i = 0; i < attackVelocity.Length; i++)
+        {
+            attackVelocity[i] *= speedMultiplier;
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        moveSpeed = originalMoveSpeed;
+        jumpForce = originalJumpForce;
+        jumpAttackVelocity = originalJumpAttackVelocity;
+        wallJumpForce = originalWallJumpForce;
+        anim.speed = originalAnimSpeed;
+
+        for (int i = 0; i < attackVelocity.Length; i++)
+        {
+            attackVelocity[i] = originalAttackVelocity[i];
+        }
+    }
+
+    public override void EntityDeath()
+    {
+        base.EntityDeath();
+
+        OnPlayerDeath?.Invoke();
+        stateMachine.ChangeState(deadState);
     }
 
     public void EnterAttackStateWithDelay()
