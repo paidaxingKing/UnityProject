@@ -8,7 +8,9 @@ public class Player : Entity
 
     public PlayerInputSet input { get; private set; }
     public Vector2 moveInput { get; private set; }
-    // States
+    public Player_SkillManager skillManager { get; private set; }
+
+    #region State Variables
     public Player_IdleState idleState { get; private set; }
     public Player_MoveState moveState { get; private set; }
     public Player_JumpState jumpState { get; private set; }
@@ -20,6 +22,8 @@ public class Player : Entity
     public Player_JumpAttackState jumpAttackState { get; private set; }
     public Player_DeadState deadState { get; private set; } 
     public Player_CounterAttackState counterAttackState { get; private set; }
+    public Player_HealState healState { get; private set; }
+    #endregion
 
     [Header("Attack Details")]
     public Vector2[] attackVelocity;
@@ -46,6 +50,7 @@ public class Player : Entity
     {
         base.Awake();
         input = new PlayerInputSet();
+        skillManager = GetComponent<Player_SkillManager>();
 
         idleState = new Player_IdleState(this, stateMachine, "idle");
         moveState = new Player_MoveState(this, stateMachine, "move");
@@ -58,6 +63,7 @@ public class Player : Entity
         jumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
         deadState = new Player_DeadState(this, stateMachine, "dead");
         counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
+        healState = new Player_HealState(this, stateMachine, "heal");
     }
 
     protected override void Start()

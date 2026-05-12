@@ -28,5 +28,17 @@ public class Player_GroundedState : PlayerState
         {
             stateMachine.ChangeState(player.counterAttackState);
         }
+
+        if (input.Player.DrinkWine.WasPerformedThisFrame() && CanBeHealed())
+        {
+            skillManager.heal.SetSkillOnCooldown();
+            stateMachine.ChangeState(player.healState);
+        }
+    }
+
+    private bool CanBeHealed()
+    {
+        if (!skillManager.heal.CanUseSkill()) return false;
+        return true;
     }
 }

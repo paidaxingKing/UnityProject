@@ -20,7 +20,13 @@ public class Entity_VFX : MonoBehaviour
 
     [Header("Element Colors")]
     [SerializeField] private Color chillVFX = Color.cyan;//冰冻特效颜色
+    [SerializeField] private Color burnVFX = Color.red;//火焰特效颜色
+    [SerializeField] private Color electrifyVFX = Color.yellow;//雷击特效颜色
     private Color originalHitVFXColor;
+
+    [Header("Heal VFX")]
+    [SerializeField] private Color healVFX = Color.green;
+
 
     private void Awake()
     {
@@ -36,6 +42,21 @@ public class Entity_VFX : MonoBehaviour
         {
             StartCoroutine(PlayStatusVFXCo(duration, chillVFX));
         }
+        else if (elementType == ElementType.Fire)
+        {
+            StartCoroutine(PlayStatusVFXCo(duration, burnVFX));
+        }
+        else if (elementType == ElementType.Lightning)
+        {
+            StartCoroutine(PlayStatusVFXCo(duration, electrifyVFX));
+        }
+    }
+
+    public void StopAllVFX()
+    {
+        StopAllCoroutines();
+        sr.color = Color.white;
+        sr.material = originalMaterial;
     }
 
     private IEnumerator PlayStatusVFXCo(float duration,Color color)

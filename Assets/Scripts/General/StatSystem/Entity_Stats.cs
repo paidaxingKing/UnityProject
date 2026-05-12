@@ -2,12 +2,14 @@ using UnityEngine;
 
 public class Entity_Stats : MonoBehaviour
 {
-    public Stat maxHp;
+    public Stat_SetupSO defaultStatSetup;
+
+    public Stat_ResourceGroup resourceStats;
     public Stat_MajorGroup majorStats;
     public Stat_OffensiveGroup offensiveStats;
     public Stat_DefensiveGroup defensiveStats;
 
-    public float GetElementalDamege(out ElementType elementType)
+    public float GetElementalDamege(out ElementType elementType,float scaleFactor)
     {
         float fireDamage = offensiveStats.fireDamage.GetValue();
         float iceDamage = offensiveStats.iceDamage.GetValue();
@@ -36,17 +38,17 @@ public class Entity_Stats : MonoBehaviour
             return 0; // 如果没有任何元素伤害，直接返回0
         }
 
-        float bonusFireDamage = (highestDamage == fireDamage) ? 0 : fireDamage * 0.5f;
-        float bonusIceDamage = (highestDamage == iceDamage) ? 0 : iceDamage * 0.5f;
-        float bonusLightningDamage = (highestDamage == lightningDamage) ? 0 : lightningDamage * 0.5f;
+        float bonusFireDamage = (elementType == ElementType.Fire) ? 0 : fireDamage * 0.5f;
+        float bonusIceDamage = (elementType == ElementType.Ice) ? 0 : iceDamage * 0.5f;
+        float bonusLightningDamage = (elementType == ElementType.Lightning) ? 0 : lightningDamage * 0.5f;
 
         // 计算最终元素伤害，最高的元素伤害全额加成，其他元素伤害加成50%，再加上智力提供的元素伤害加成
         float weakerElementDamage = bonusFireDamage + bonusIceDamage + bonusLightningDamage;
         float finalDamage = highestDamage + bonusElementaDamage + weakerElementDamage; 
-        return finalDamage;
+        return finalDamage * scaleFactor;
     }
 
-    public float GetPhysicalDamage(out bool isCriticalHit)
+    public float GetPhysicalDamage(out bool isCriticalHit,float scaleFactor)
     {
         float baseDamage = offensiveStats.damage.GetValue();
         float bonuslDamage = majorStats.strength.GetValue(); // 每一点力量值增加1点物理伤害
@@ -64,7 +66,7 @@ public class Entity_Stats : MonoBehaviour
 
         float finalDamage = isCriticalHit ? totalBaseDamage * (1 + totalCritPower / 100f) : totalBaseDamage; // 计算最终伤害
 
-        return finalDamage;
+        return finalDamage * scaleFactor;
 
     }
 
@@ -121,7 +123,7 @@ public class Entity_Stats : MonoBehaviour
 
     public float GetMaxHp()
     {
-        float baseHp = maxHp.GetValue();
+        float baseHp = resourceStats.maxHealth.GetValue();
         float bonusHp = majorStats.vitality.GetValue() * 5; // 每一点活力值增加5点生命值上线
         float finalHp = baseHp + bonusHp;
 
@@ -137,5 +139,39 @@ public class Entity_Stats : MonoBehaviour
         float evasionCap = 75f; // 设置闪避上限为75%,cap是指上限的意思，避免闪避过高导致游戏失衡
         float finalEvasion = Mathf.Clamp(totalEvasion, 0, evasionCap); // 将总闪避值限制在0到上限之间
         return finalEvasion;
+    }
+
+    [ContextMenu("Update Default Stat Setup")]
+    public void ApplyDefaultStatsSetup()
+    {
+        if (defaultStatSetup == null)
+        {
+            Debug.Log("No default stat setup assigned");
+            return;
+        }
+
+        resourceStats.maxHealth.SetBaseValue(defaultStatSetup.maxHp);
+        resourceStats.healthRegen.SetBaseValue(defaultStatSetup.healthRegen);
+
+        majorStats.strength.SetBaseValue(defaultStatSetup.strength);
+        majorStats.agility.SetBaseValue(defaultStatSetup.agility);
+        majorStats.intelligence.SetBaseValue(defaultStatSetup.intelligence);
+        majorStats.vitality.SetBaseValue(defaultStatSetup.vitality);
+
+        offensiveStats.damage.SetBaseValue(defaultStatSetup.damage);
+        offensiveStats.critChance.SetBaseValue(defaultStatSetup.critChance);
+        offensiveStats.critPower.SetBaseValue(defaultStatSetup.critPower);
+        offensiveStats.armorReduction.SetBaseValue(defaultStatSetup.armorReduction);
+
+        offensiveStats.iceDamage.SetBaseValue(defaultStatSetup.iceDamage);
+        offensiveStats.fireDamage.SetBaseValue(defaultStatSetup.fireDamage);
+        offensiveStats.lightningDamage.SetBaseValue(defaultStatSetup.lightningDamage);
+
+        defensiveStats.iceResistance.SetBaseValue(defaultStatSetup.iceResistance);
+        defensiveStats.fireResistance.SetBaseValue(defaultStatSetup.fireResistance);
+        defensiveStats.lightningResistance.SetBaseValue(defaultStatSetup.lightningResistance);
+
+        defensiveStats.armor.SetBaseValue(defaultStatSetup.armor);
+        defensiveStats.evasion.SetBaseValue(defaultStatSetup.evasion);
     }
 }

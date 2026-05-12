@@ -66,7 +66,15 @@ public class Entity_Health : MonoBehaviour,IDamageable
         return Random.Range(0,100) < entityStats.GetEvasion();
     }
 
-    protected void ReduceHp(float damage)
+    public void AddHp(float health)
+    {
+        if (currentHp <= 0) return;
+
+        currentHp = Mathf.Min(currentHp + health,entityStats.GetMaxHp());
+        UpdateHealthBar();
+    }
+
+    public void ReduceHp(float damage)
     {
         entityVFX.PlayOnDamageVFX();
         currentHp -= damage;

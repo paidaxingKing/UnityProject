@@ -10,7 +10,7 @@ public class Entity : MonoBehaviour
     public Rigidbody2D rb { get; private set; }
 
     protected StateMachine stateMachine;
-   
+    protected Entity_Health entity_Health;
 
     protected bool facingRight = true;
     public int facingDir { get; private set; } = 1;
@@ -34,6 +34,7 @@ public class Entity : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        entity_Health = GetComponent<Entity_Health>();
 
         stateMachine = new StateMachine();
        
@@ -48,6 +49,11 @@ public class Entity : MonoBehaviour
     {
         HandleCollisionDetection();
         stateMachine.currentState.Update();
+    }
+
+    public void DestroyThis()
+    {
+        Destroy(gameObject,2);
     }
 
     public virtual void EntityDeath()
@@ -121,6 +127,11 @@ public class Entity : MonoBehaviour
         facingDir *= -1;
 
         OnFlipped?.Invoke();
+    }
+
+    public void AddHp(float health)
+    {
+        entity_Health.AddHp(health);
     }
 
     private void HandleCollisionDetection()

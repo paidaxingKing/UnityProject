@@ -5,6 +5,7 @@ public abstract class PlayerState : EntityState
 {
     protected Player player;
     protected PlayerInputSet input;
+    protected Player_SkillManager skillManager;
    
     public PlayerState(Player player,StateMachine stateMachine, string animBoolName) : base(stateMachine, animBoolName)
     {
@@ -13,6 +14,7 @@ public abstract class PlayerState : EntityState
         anim = player.anim;
         rb = player.rb;
         input = player.input;
+        skillManager = player.skillManager;
     }
 
     public override void Enter()
@@ -24,8 +26,9 @@ public abstract class PlayerState : EntityState
     {
         base .Update();
         
-        if (input.Player.Dash.WasPressedThisFrame())
+        if (input.Player.Dash.WasPressedThisFrame() && CanDash())
         {
+            skillManager.dash.SetSkillOnCooldown();
             stateMachine.ChangeState(player.dashState);
         }
     }
@@ -43,6 +46,7 @@ public abstract class PlayerState : EntityState
 
     private bool CanDash()
     {
+        if (!skillManager.dash.CanUseSkill()) return false;
         return true;
     }
 }

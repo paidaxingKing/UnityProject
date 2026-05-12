@@ -6,6 +6,12 @@ public class Player_WallSlideState : PlayerState
     {
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+        
+    }
+
     public override void Update()
     {
         base.Update();

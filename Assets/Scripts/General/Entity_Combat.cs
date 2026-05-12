@@ -1,3 +1,4 @@
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class Entity_Combat : MonoBehaviour
@@ -11,8 +12,9 @@ public class Entity_Combat : MonoBehaviour
     [SerializeField] private LayerMask whatIsTarget;
 
     [Header("Status Effect Details")]
-    [SerializeField] private float defaultChillDuration = 3f;
+    [SerializeField] private float defaultDuration = 3f;
     [SerializeField] private float defaultChillSlowMultiplier = 0.2f;
+    [SerializeField] private float defaultCharge = 0.25f;
 
     private void Awake()
     {
@@ -30,13 +32,13 @@ public class Entity_Combat : MonoBehaviour
             {
                 bool isCrit;
                 ElementType elementType;
-                float elementalDamage = entityStats.GetElementalDamege(out elementType);
+                float elementalDamage = entityStats.GetElementalDamege(out elementType,0.6f);
                 
-                bool targetGotHit = damageableTarget.BeDamaged(entityStats.GetPhysicalDamage(out isCrit),elementalDamage,elementType, transform); 
+                bool targetGotHit = damageableTarget.BeDamaged(entityStats.GetPhysicalDamage(out isCrit,1),elementalDamage,elementType, transform); 
                 
                 if (elementType != ElementType.None)
                 {
-                    ApplyStatusEffect(target.transform,elementType);
+                    ApplyStatusEffect(target.transform,elementType,0.4f);
                 }
 
                 if (targetGotHit)
@@ -48,14 +50,24 @@ public class Entity_Combat : MonoBehaviour
         }
     }
 
-    public void ApplyStatusEffect(Transform target,ElementType elementType)
+    public void ApplyStatusEffect(Transform target,ElementType elementType,float scaleFactor)
     {
         Entity_StatusHandler statusHandler = target.GetComponent<Entity_StatusHandler>();
         if (statusHandler == null) return;
 
         if (elementType == ElementType.Ice && statusHandler.CanBeApplied(elementType))
         {
-            statusHandler.ApplyChilledEffect(defaultChillDuration,defaultChillSlowMultiplier);
+            statusHandler.ApplyChillEffect(defaultDuration,defaultChillSlowMultiplier);
+        }
+        else if (elementType == ElementType.Fire  && statusHandler.CanBeApplied(elementType))
+        {
+            float fireDamage = entityStats.offensiveStats.fireDamage.GetValue() * scaleFactor;
+            statusHandler.ApplyBurnEffect(defaultDuration, fireDamage);
+        }
+        else if (elementType == ElementType.Lightning && statusHandler.CanBeApplied(elementType))
+        {
+            float lightningDamage = entityStats.offensiveStats.lightningDamage.GetValue() * scaleFactor;
+            statusHandler.ApplyElectrifyEffect(defaultDuration, lightningDamage,defaultCharge);
         }
     }
 
