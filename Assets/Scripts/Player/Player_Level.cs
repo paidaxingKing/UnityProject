@@ -50,27 +50,5 @@ public class PlayerLevel : MonoBehaviour
         expToNextLevel = Mathf.RoundToInt(expToNextLevel * 1.25f);
     }
 
-    public void AddStatPoint(PlayerStatType type)
-    {
-        if (statPoints <= 0) return;
-
-        switch (type)
-        {
-            case PlayerStatType.Strength:
-                stats.majorStats.strength.AddBonus(1);
-                break;
-            case PlayerStatType.Agility:
-                stats.majorStats.agility.AddBonus(1);
-                break;
-            case PlayerStatType.Vitality:
-                stats.majorStats.vitality.AddBonus(1);
-                break;
-            case PlayerStatType.Intelligence:
-                stats.majorStats.intelligence.AddBonus(1);
-                break;
-        }
-
-        statPoints--;
-        OnLevelDataChanged?.Invoke();
-    }
+    
 }

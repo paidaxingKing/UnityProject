@@ -1,12 +1,19 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Entity_Health : MonoBehaviour,IDamageable
 {
+
+    public event Action OnTakingDamage;
+
+    public event Action OnHealthUpdate;
+
     private Entity_VFX entityVFX;
     private Entity entity;
     private Slider healthBar;
     private Entity_Stats entityStats;
+    private Entity_DropManager dropManager;
 
     [SerializeField] protected float currentHp;
     [SerializeField] protected bool isDead = false;
@@ -25,9 +32,31 @@ public class Entity_Health : MonoBehaviour,IDamageable
         entity = GetComponent<Entity>();
         healthBar = GetComponentInChildren<Slider>();
         entityStats = GetComponent<Entity_Stats>();
+        dropManager = GetComponent<Entity_DropManager>();
 
         currentHp = entityStats.GetMaxHp();
         UpdateHealthBar();
+    }
+
+    public float GetMaxHp()
+    {
+        return entityStats.GetMaxHp();
+    }
+
+    public float GetCurHp()
+    {
+        return Mathf.Max(0,currentHp);
+    }
+
+    public float GetHealthPercent()
+    {
+        return currentHp / entityStats.GetMaxHp();
+    }
+
+    public void SetHealthToPercent(float percent)
+    {
+        currentHp = entityStats.GetMaxHp() * Mathf.Clamp(percent,0,1);
+        OnHealthUpdate?.Invoke();
     }
 
     public virtual bool BeDamaged(float damage,float elementalDamage,ElementType elementType, Transform damageCauser)
@@ -40,7 +69,7 @@ public class Entity_Health : MonoBehaviour,IDamageable
         }
 
         Entity_Stats attackerStats = damageCauser.GetComponent<Entity_Stats>();//获得攻击者的属性
-        float armorReduction = attackerStats.GetArmorReduction();//根据攻击者的属性计算护甲穿透
+        float armorReduction = attackerStats != null ? attackerStats.GetArmorReduction() : 0;//根据攻击者的属性计算护甲穿透
 
         float mitigation = entityStats.GetArmorMitigation(armorReduction);//根据护甲穿透和自身护甲值计算护甲减免
         float finalPhysicalDamage = damage * (1 - mitigation);
@@ -50,6 +79,8 @@ public class Entity_Health : MonoBehaviour,IDamageable
 
         TakeKnockback(damageCauser, finalPhysicalDamage);
         ReduceHp(finalPhysicalDamage + finalElementalDamage);
+
+        OnTakingDamage?.Invoke();
 
         return true;
     }
@@ -63,7 +94,7 @@ public class Entity_Health : MonoBehaviour,IDamageable
 
     private bool AttackEvaded()
     {
-        return Random.Range(0,100) < entityStats.GetEvasion();
+        return UnityEngine.Random.Range(0,100) < entityStats.GetEvasion();
     }
 
     public void AddHp(float health)
@@ -71,6 +102,7 @@ public class Entity_Health : MonoBehaviour,IDamageable
         if (currentHp <= 0) return;
 
         currentHp = Mathf.Min(currentHp + health,entityStats.GetMaxHp());
+        OnHealthUpdate?.Invoke();
         UpdateHealthBar();
     }
 
@@ -78,6 +110,7 @@ public class Entity_Health : MonoBehaviour,IDamageable
     {
         entityVFX.PlayOnDamageVFX();
         currentHp -= damage;
+        OnHealthUpdate?.Invoke();
         UpdateHealthBar();
         if (currentHp <= 0)
         {
@@ -91,11 +124,12 @@ public class Entity_Health : MonoBehaviour,IDamageable
         healthBar.value = currentHp / entityStats.GetMaxHp();
     }
 
-    private void Die()
+    protected virtual void Die()
     {
         isDead = true;
 
         entity.EntityDeath();
+        dropManager?.DropItems();
     }
 
     private float CalculateKnockbackDuration(float damage)

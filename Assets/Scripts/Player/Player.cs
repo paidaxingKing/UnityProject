@@ -4,11 +4,18 @@ using System;
 
 public class Player : Entity
 {
+    public static Player instance;
+
     public static event Action OnPlayerDeath;
+
+    private UI ui;
 
     public PlayerInputSet input { get; private set; }
     public Vector2 moveInput { get; private set; }
     public Player_SkillManager skillManager { get; private set; }
+    public Player_VFX vfx { get; private set; }
+    public Player_Combat combat;
+
 
     #region State Variables
     public Player_IdleState idleState { get; private set; }
@@ -49,8 +56,14 @@ public class Player : Entity
     protected override void Awake()
     {
         base.Awake();
+        ui = FindAnyObjectByType<UI>();
+
         input = new PlayerInputSet();
+        ui.SetupControlsUI(input);
+
         skillManager = GetComponent<Player_SkillManager>();
+        vfx = GetComponent<Player_VFX>();
+        combat = GetComponent<Player_Combat>();
 
         idleState = new Player_IdleState(this, stateMachine, "idle");
         moveState = new Player_MoveState(this, stateMachine, "move");
@@ -64,6 +77,8 @@ public class Player : Entity
         deadState = new Player_DeadState(this, stateMachine, "dead");
         counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
         healState = new Player_HealState(this, stateMachine, "heal");
+
+        instance = this;
     }
 
     protected override void Start()
@@ -74,9 +89,13 @@ public class Player : Entity
 
     protected override void Update()
     {
-        base .Update();
+        base.Update();
     }
 
+    public void TeleportPlayer(Vector3 position)
+    {
+        transform.position = position;
+    }
     protected override IEnumerator SlowDownEntityCo(float duration, float slowMultiplier)
     {
         float originalMoveSpeed = moveSpeed;
@@ -143,6 +162,10 @@ public class Player : Entity
 
         input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         input.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+
+        input.Player.Spell.performed += ctx => skillManager.shard.TryUseSkill();
+        //这段代码体现了事件驱动的思想。
+        //它不是在 Update 里每帧询问：“玩家按键了吗？”，而是告诉系统：“如果玩家按了那个键，请通知我，我再执行动作。”
     }
 
     private void OnDisable()

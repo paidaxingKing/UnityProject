@@ -10,6 +10,11 @@ public class Player_DashState : PlayerState
     public override void Enter()
     {
         base.Enter();
+
+        skillManager.dash.OnStartEffect();
+
+        player.vfx.PlayImageEchoEffect(player.dashDuration);
+
         originalGravity = rb.gravityScale;  
         stateTimer = player.dashDuration;
         rb.gravityScale = 0;
@@ -40,6 +45,9 @@ public class Player_DashState : PlayerState
     public override void Exit()
     {
         base.Exit();
+
+        skillManager.dash.OnEndEffect();
+
         player.SetVelocity(0, 0);
         rb .gravityScale = originalGravity;
     }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7270431788870317577}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,7 @@ GameObject:
   m_Component:
   - component: {fileID: 23473437705476270}
   - component: {fileID: 3284451900925387895}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 83754413649084444}
   - component: {fileID: 1575001975628067917}
   - component: {fileID: 8091884249244755951}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy_Skeleton _Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,6 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0090ad5eda620f429cd06cd28b3b63e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy_Skeleton
+  entity_Stats: {fileID: 0}
   groundCheckDistance: 0.5
   wallCheckDistance: 1.32
   whatIsGround:
@@ -283,14 +284,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entity_Combat
   entityStats: {fileID: 0}
+  basicAttackScale:
+    physical: 1
+    elemental: 1
+    chillDuration: 3
+    chillSlowMultiplier: 0.3
+    burnDuration: 3
+    burnDamageScale: 1
+    shockDuration: 3
+    shockDamageScale: 1
+    shockCharge: 0.4
   targetCheck: {fileID: 9080809557289384663}
   targetCheckRadius: 1
   whatIsTarget:
     serializedVersion: 2
     m_Bits: 128
-  defaultDuration: 3
-  defaultChillSlowMultiplier: 0.5
-  defaultCharge: 0.25
 --- !u!114 &7429089487563903768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,8 +337,7 @@ MonoBehaviour:
   critHitVFX: {fileID: 8511077181234444496, guid: 4e7f55f36c5a14d44b7b9468f2ed55a4, type: 3}
   chillVFX: {r: 0, g: 1, b: 1, a: 1}
   burnVFX: {r: 1, g: 0.27450982, b: 0.27450982, a: 1}
-  electrifyVFX: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  healVFX: {r: 0, g: 1, b: 0, a: 1}
+  shockVFX: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   attackAlert: {fileID: 5659007885335163165}
 --- !u!114 &83754413649084444
 MonoBehaviour:
@@ -348,61 +355,61 @@ MonoBehaviour:
   resourceStats:
     maxHealth:
       baseValue: 100
-      bonusValue: 0
+      modifications: []
     healthRegen:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
   majorStats:
     strength:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     agility:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     vitality:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     intelligence:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
   offensiveStats:
     damage:
       baseValue: 20
-      bonusValue: 0
+      modifications: []
     critPower:
       baseValue: 150
-      bonusValue: 0
+      modifications: []
     critChance:
       baseValue: 20
-      bonusValue: 0
+      modifications: []
     armorReduction:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     fireDamage:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     iceDamage:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     lightningDamage:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
   defensiveStats:
     armor:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     evasion:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     fireResistance:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     iceResistance:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
     lightningResistance:
       baseValue: 0
-      bonusValue: 0
+      modifications: []
 --- !u!114 &1575001975628067917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,7 +449,7 @@ GameObject:
   - component: {fileID: 9084327920430618409}
   - component: {fileID: 5554553900483185186}
   - component: {fileID: 3662349380877601143}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -517,7 +524,7 @@ GameObject:
   - component: {fileID: 1710938403247740917}
   - component: {fileID: 8201618511874303573}
   - component: {fileID: 8905976002036926725}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -591,7 +598,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3494702695789845324}
   - component: {fileID: 146977135962272296}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: AttackAlert
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -681,7 +688,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3388348980610904520}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -715,7 +722,7 @@ GameObject:
   - component: {fileID: 1717929824543077445}
   - component: {fileID: 1887063593905112511}
   - component: {fileID: 194736174293502411}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Animator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -843,7 +850,7 @@ GameObject:
   - component: {fileID: 1983114704945812789}
   - component: {fileID: 1233917103040780240}
   - component: {fileID: 7039586199454846183}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: HealthBar_UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -954,7 +961,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9080809557289384663}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: TargetCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}

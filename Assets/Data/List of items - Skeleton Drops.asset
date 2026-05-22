@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50b91119b9914874bb87b62998bb6096, type: 3}
+  m_Name: List of items - Skeleton Drops
+  m_EditorClassIdentifier: Assembly-CSharp::ItemList_DataSO
+  itemList:
+  - {fileID: 11400000, guid: a0b05fe913f64564ea85ddbb4c3d2034, type: 2}
+  - {fileID: 11400000, guid: e4d7e2e49f5469f4b88ef774cbbcda06, type: 2}
+  - {fileID: 11400000, guid: 9f08dcc06daf91a46a7c0d0ad98a45fe, type: 2}
+  - {fileID: 11400000, guid: 61447cfd7dee6bb428ffca338d31cf7b, type: 2}

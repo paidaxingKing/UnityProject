@@ -9,6 +9,32 @@ public class Entity_Stats : MonoBehaviour
     public Stat_OffensiveGroup offensiveStats;
     public Stat_DefensiveGroup defensiveStats;
 
+    public AttackData GetAttackData(DamageScaleData scaleData)
+    {
+        return new AttackData(this,scaleData);
+    }
+
+    public float GetBaseDamage()
+    {
+        return offensiveStats.damage.GetValue() + majorStats.strength.GetValue();
+    }
+
+    public float GetCritChance()
+    {
+        return offensiveStats.critChance.GetValue() + majorStats.agility.GetValue() * 0.5f;
+    }
+
+    public float GetCritPower()
+    {
+        return offensiveStats.critPower.GetValue() + majorStats.strength.GetValue() * 0.5f;
+    }
+
+    public float GetBaseArmor()
+    {
+        return defensiveStats.armor.GetValue() + majorStats.vitality.GetValue();
+    }
+
+
     public float GetElementalDamege(out ElementType elementType,float scaleFactor)
     {
         float fireDamage = offensiveStats.fireDamage.GetValue();
@@ -50,21 +76,15 @@ public class Entity_Stats : MonoBehaviour
 
     public float GetPhysicalDamage(out bool isCriticalHit,float scaleFactor)
     {
-        float baseDamage = offensiveStats.damage.GetValue();
-        float bonuslDamage = majorStats.strength.GetValue(); // 每一点力量值增加1点物理伤害
-        float totalBaseDamage = baseDamage + bonuslDamage;
+        float baseDamage = GetBaseDamage();
 
-        float baseCritChance = offensiveStats.critChance.GetValue();
-        float bonusCritChance = majorStats.agility.GetValue() * 0.5f; // 每一点敏捷值增加0.5的暴击率
-        float totalCritChance = baseCritChance + bonusCritChance;
+        float critChance = GetCritChance();
 
-        float baseCritPower = offensiveStats.critPower.GetValue();
-        float bonusCritPower = majorStats.strength.GetValue() * 0.5f; // 每一点力量值增加0.5的暴击伤害加成
-        float totalCritPower = baseCritPower + bonusCritPower;
+        float critPower = GetCritPower();
 
-        isCriticalHit = Random.Range(0, 100) < totalCritChance; // 判断是否暴击
+        isCriticalHit = Random.Range(0, 100) < critChance; // 判断是否暴击
 
-        float finalDamage = isCriticalHit ? totalBaseDamage * (1 + totalCritPower / 100f) : totalBaseDamage; // 计算最终伤害
+        float finalDamage = isCriticalHit ? baseDamage * (1 + critPower / 100f) : baseDamage; // 计算最终伤害
 
         return finalDamage * scaleFactor;
 
@@ -105,13 +125,11 @@ public class Entity_Stats : MonoBehaviour
 
     public float GetArmorMitigation(float armorReduction)//mitigation是指减免的意思，armor mitigation就是护甲减免，指的是护甲提供的伤害减免效果
     {
-        float baseArmor = defensiveStats.armor.GetValue();
-        float bonusArmor = majorStats.vitality.GetValue() * 1; // 每一点活力值增加1点护甲
-        float totalArmor = baseArmor + bonusArmor;
+        float baseArmor = GetBaseArmor();
 
         float reductionMultiplier = Mathf.Clamp(1 - armorReduction,0,1); // 计算护甲穿透后的护甲值乘数，护甲穿透是一个百分比，减少护甲提供的减免效果
 
-        float reducedArmor = totalArmor * reductionMultiplier; // 计算穿透后的护甲值
+        float reducedArmor = baseArmor * reductionMultiplier; // 计算穿透后的护甲值
 
         float mitigation = reducedArmor / (reducedArmor + 100); // 计算伤害减免，假设每100点护甲提供50%的伤害减免
         float mitigationCap = 0.75f; // 设置伤害减免上限为75%，cap是指上限的意思，避免伤害减免过高导致游戏失衡
@@ -139,6 +157,39 @@ public class Entity_Stats : MonoBehaviour
         float evasionCap = 75f; // 设置闪避上限为75%,cap是指上限的意思，避免闪避过高导致游戏失衡
         float finalEvasion = Mathf.Clamp(totalEvasion, 0, evasionCap); // 将总闪避值限制在0到上限之间
         return finalEvasion;
+    }
+
+    public Stat GetStatByType(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.MaxHealth: return resourceStats.maxHealth;
+
+            case StatType.Strength: return majorStats.strength;
+            case StatType.Agility: return majorStats.agility;
+            case StatType.Intelligence: return majorStats.intelligence;
+            case StatType.Vitality: return majorStats.vitality;
+
+            case StatType.Damage: return offensiveStats.damage;
+            case StatType.CritChance: return offensiveStats.critChance;
+            case StatType.CritPower: return offensiveStats.critPower;
+            case StatType.ArmorReduction: return offensiveStats.armorReduction;
+
+            case StatType.FireDamage: return offensiveStats.fireDamage;
+            case StatType.IceDamage: return offensiveStats.iceDamage;
+            case StatType.LightningDamage: return offensiveStats.lightningDamage;
+
+            case StatType.Armor: return defensiveStats.armor;
+            case StatType.Evasion: return defensiveStats.evasion;
+
+            case StatType.FireResistance: return defensiveStats.fireResistance;
+            case StatType.IceResistance: return defensiveStats.iceResistance;
+            case StatType.LightningResistance: return defensiveStats.lightningResistance;
+
+            default:
+                Debug.Log("没有这样的数据");
+                return null;
+        }
     }
 
     [ContextMenu("Update Default Stat Setup")]

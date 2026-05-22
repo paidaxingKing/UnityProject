@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Entity_VFX : MonoBehaviour
 {
-    private SpriteRenderer sr;
+    protected SpriteRenderer sr;
     private Entity entity;
 
     [Header("On Damage VFX")]
@@ -21,12 +21,8 @@ public class Entity_VFX : MonoBehaviour
     [Header("Element Colors")]
     [SerializeField] private Color chillVFX = Color.cyan;//冰冻特效颜色
     [SerializeField] private Color burnVFX = Color.red;//火焰特效颜色
-    [SerializeField] private Color electrifyVFX = Color.yellow;//雷击特效颜色
+    [SerializeField] private Color shockVFX = Color.yellow;//雷击特效颜色
     private Color originalHitVFXColor;
-
-    [Header("Heal VFX")]
-    [SerializeField] private Color healVFX = Color.green;
-
 
     private void Awake()
     {
@@ -48,7 +44,7 @@ public class Entity_VFX : MonoBehaviour
         }
         else if (elementType == ElementType.Lightning)
         {
-            StartCoroutine(PlayStatusVFXCo(duration, electrifyVFX));
+            StartCoroutine(PlayStatusVFXCo(duration, shockVFX));
         }
     }
 
@@ -81,11 +77,11 @@ public class Entity_VFX : MonoBehaviour
         sr.color = Color.white;
     }
 
-    public void CreateOnHitVFX(Transform target, bool isCrit)
+    public void CreateOnHitVFX(Transform target, bool isCrit,ElementType elementType)
     {
         GameObject hitVFXPrefab = isCrit ? critHitVFX : hitVFX;//根据是否暴击选择不同的特效预制件
         GameObject vfx = Instantiate(hitVFXPrefab,target.position,Quaternion.identity);//实例化，在指定位置生成预制件特效
-        vfx.GetComponentInChildren<SpriteRenderer>().color = hitVFXColor;//设置特效颜色
+        vfx.GetComponentInChildren<SpriteRenderer>().color = GetElementColor(elementType);//设置特效颜色
 
         if (entity.facingDir == -1 && isCrit)
         {
@@ -93,16 +89,18 @@ public class Entity_VFX : MonoBehaviour
         }
     }
 
-    public void UpdateOnHitColor(ElementType elementType)
+    public Color GetElementColor(ElementType elementType)
     {
         switch(elementType)
         {
             case ElementType.Ice:
-                hitVFXColor = chillVFX;
-                break;
+                return chillVFX;
+            case ElementType.Fire:
+                return burnVFX;
+            case ElementType.Lightning:
+                return shockVFX;
             default:
-                hitVFXColor = originalHitVFXColor;
-                break;
+                return Color.white;
         }
     }
 

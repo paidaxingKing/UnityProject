@@ -10,7 +10,8 @@ public class Entity : MonoBehaviour
     public Rigidbody2D rb { get; private set; }
 
     protected StateMachine stateMachine;
-    protected Entity_Health entity_Health;
+    public Entity_Health entity_Health;
+    public Entity_Stats entity_Stats;
 
     protected bool facingRight = true;
     public int facingDir { get; private set; } = 1;
@@ -35,6 +36,7 @@ public class Entity : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
         entity_Health = GetComponent<Entity_Health>();
+        entity_Stats = GetComponent<Entity_Stats>();
 
         stateMachine = new StateMachine();
        
@@ -127,11 +129,6 @@ public class Entity : MonoBehaviour
         facingDir *= -1;
 
         OnFlipped?.Invoke();
-    }
-
-    public void AddHp(float health)
-    {
-        entity_Health.AddHp(health);
     }
 
     private void HandleCollisionDetection()

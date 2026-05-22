@@ -9,7 +9,7 @@ public class Player_HealState : PlayerState
     {
         base.Enter();
 
-        player.AddHp(20);
+        player.entity_Health.AddHp(100);
         player.SetVelocity(0,0);
     }
 
