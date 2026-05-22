@@ -1,13 +1,23 @@
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditorInternal;
 using UnityEngine;
+using System;
 
 public class Player : Entity
 {
+    public static Player instance;
+
+    public static event Action OnPlayerDeath;
+
+    private UI ui;
+
     public PlayerInputSet input { get; private set; }
     public Vector2 moveInput { get; private set; }
-    // States
+    public Player_SkillManager skillManager { get; private set; }
+    public Player_VFX vfx { get; private set; }
+    public Player_Combat combat;
+
+
+    #region State Variables
     public Player_IdleState idleState { get; private set; }
     public Player_MoveState moveState { get; private set; }
     public Player_JumpState jumpState { get; private set; }
@@ -17,6 +27,10 @@ public class Player : Entity
     public Player_DashState dashState { get; private set; }
     public Player_BasicAttackState basicAttackState { get; private set; }
     public Player_JumpAttackState jumpAttackState { get; private set; }
+    public Player_DeadState deadState { get; private set; } 
+    public Player_CounterAttackState counterAttackState { get; private set; }
+    public Player_HealState healState { get; private set; }
+    #endregion
 
     [Header("Attack Details")]
     public Vector2[] attackVelocity;
@@ -42,7 +56,14 @@ public class Player : Entity
     protected override void Awake()
     {
         base.Awake();
+        ui = FindAnyObjectByType<UI>();
+
         input = new PlayerInputSet();
+        ui.SetupControlsUI(input);
+
+        skillManager = GetComponent<Player_SkillManager>();
+        vfx = GetComponent<Player_VFX>();
+        combat = GetComponent<Player_Combat>();
 
         idleState = new Player_IdleState(this, stateMachine, "idle");
         moveState = new Player_MoveState(this, stateMachine, "move");
@@ -53,6 +74,11 @@ public class Player : Entity
         dashState = new Player_DashState(this, stateMachine, "dash");
         basicAttackState = new Player_BasicAttackState(this, stateMachine, "basicAttack");
         jumpAttackState = new Player_JumpAttackState(this, stateMachine, "jumpAttack");
+        deadState = new Player_DeadState(this, stateMachine, "dead");
+        counterAttackState = new Player_CounterAttackState(this, stateMachine, "counterAttack");
+        healState = new Player_HealState(this, stateMachine, "heal");
+
+        instance = this;
     }
 
     protected override void Start()
@@ -63,7 +89,56 @@ public class Player : Entity
 
     protected override void Update()
     {
-        base .Update();
+        base.Update();
+    }
+
+    public void TeleportPlayer(Vector3 position)
+    {
+        transform.position = position;
+    }
+    protected override IEnumerator SlowDownEntityCo(float duration, float slowMultiplier)
+    {
+        float originalMoveSpeed = moveSpeed;
+        float originalJumpForce = jumpForce;
+        float originalAnimSpeed = anim.speed;
+
+        Vector2[] originalAttackVelocity = (Vector2[])attackVelocity.Clone();
+        Vector2 originalJumpAttackVelocity = jumpAttackVelocity;
+        Vector2 originalWallJumpForce = wallJumpForce;
+
+        float speedMultiplier = 1 - slowMultiplier;
+
+        moveSpeed *= speedMultiplier;
+        jumpForce *= speedMultiplier;
+        jumpAttackVelocity *= speedMultiplier;
+        wallJumpForce *= speedMultiplier;
+        anim.speed *= speedMultiplier;
+
+        for (int i = 0; i < attackVelocity.Length; i++)
+        {
+            attackVelocity[i] *= speedMultiplier;
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        moveSpeed = originalMoveSpeed;
+        jumpForce = originalJumpForce;
+        jumpAttackVelocity = originalJumpAttackVelocity;
+        wallJumpForce = originalWallJumpForce;
+        anim.speed = originalAnimSpeed;
+
+        for (int i = 0; i < attackVelocity.Length; i++)
+        {
+            attackVelocity[i] = originalAttackVelocity[i];
+        }
+    }
+
+    public override void EntityDeath()
+    {
+        base.EntityDeath();
+
+        OnPlayerDeath?.Invoke();
+        stateMachine.ChangeState(deadState);
     }
 
     public void EnterAttackStateWithDelay()
@@ -87,6 +162,10 @@ public class Player : Entity
 
         input.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         input.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+
+        input.Player.Spell.performed += ctx => skillManager.shard.TryUseSkill();
+        //这段代码体现了事件驱动的思想。
+        //它不是在 Update 里每帧询问：“玩家按键了吗？”，而是告诉系统：“如果玩家按了那个键，请通知我，我再执行动作。”
     }
 
     private void OnDisable()
