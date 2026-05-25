@@ -10,7 +10,7 @@ public class Player_DashState : PlayerState
     public override void Enter()
     {
         base.Enter();
-
+        Player.instance.sfx.PlayDash();
         skillManager.dash.OnStartEffect();
 
         player.vfx.PlayImageEchoEffect(player.dashDuration);

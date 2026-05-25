@@ -9,7 +9,7 @@ public class Player_JumpState : Player_AirState
     public override void Enter()
     {
         base.Enter();
-        
+        Player.instance.sfx.PlayJump();
         player.SetVelocity(rb.linearVelocity.x, player.jumpForce);
     }
 

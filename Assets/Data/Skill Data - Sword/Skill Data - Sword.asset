@@ -10,9 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c0f6e182d904da42a7b534506f5f06b, type: 3}
-  m_Name: Skill Data - Time Echo
+  m_Name: Skill Data - Sword
   m_EditorClassIdentifier: Assembly-CSharp::Skill_DataSO
-  cost: 1
-  skillName: Time Echo
+  skillName: Sword
   description: "\u65F6\u95F4\u56DE\u58F0"
   icon: {fileID: -37600620, guid: c67ef0605bd4adb46bb25076d3a5c836, type: 3}
+  cost: 1
+  skillType: 1
+  upgradeData:
+    upgradeType: 11
+    cooldown: 2
+    damageScale:
+      physical: 1
+      elemental: 1
+      chillDuration: 3
+      chillSlowMultiplier: 0.3
+      burnDuration: 3
+      burnDamageScale: 1
+      shockDuration: 3
+      shockDamageScale: 1
+      shockCharge: 0.4

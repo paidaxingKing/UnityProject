@@ -8,13 +8,15 @@ public class Player : Entity
 
     public static event Action OnPlayerDeath;
 
-    private UI ui;
+    public UI ui;
 
     public PlayerInputSet input { get; private set; }
     public Vector2 moveInput { get; private set; }
     public Player_SkillManager skillManager { get; private set; }
     public Player_VFX vfx { get; private set; }
+
     public Player_Combat combat;
+    public Player_SFX sfx { get; private set; }
 
 
     #region State Variables
@@ -64,6 +66,7 @@ public class Player : Entity
         skillManager = GetComponent<Player_SkillManager>();
         vfx = GetComponent<Player_VFX>();
         combat = GetComponent<Player_Combat>();
+        sfx = GetComponent<Player_SFX>();
 
         idleState = new Player_IdleState(this, stateMachine, "idle");
         moveState = new Player_MoveState(this, stateMachine, "move");
@@ -164,6 +167,7 @@ public class Player : Entity
         input.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
         input.Player.Spell.performed += ctx => skillManager.shard.TryUseSkill();
+        input.Player.Sword.performed += ctx => skillManager.sword.TryUseSkill();
         //这段代码体现了事件驱动的思想。
         //它不是在 Update 里每帧询问：“玩家按键了吗？”，而是告诉系统：“如果玩家按了那个键，请通知我，我再执行动作。”
     }

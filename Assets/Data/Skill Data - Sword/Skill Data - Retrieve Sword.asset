@@ -10,9 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c0f6e182d904da42a7b534506f5f06b, type: 3}
-  m_Name: Skill Data - Heal
+  m_Name: Skill Data - Retrieve Sword
   m_EditorClassIdentifier: Assembly-CSharp::Skill_DataSO
-  cost: 2
-  skillName: Heal
+  skillName: Retrieve Swords
   description: "\u6CBB\u7597"
   icon: {fileID: -970928817, guid: c67ef0605bd4adb46bb25076d3a5c836, type: 3}
+  cost: 2
+  skillType: 1
+  upgradeData:
+    upgradeType: 13
+    cooldown: 0
+    damageScale:
+      physical: 1
+      elemental: 1
+      chillDuration: 3
+      chillSlowMultiplier: 0.3
+      burnDuration: 3
+      burnDamageScale: 1
+      shockDuration: 3
+      shockDamageScale: 1
+      shockCharge: 0.4
