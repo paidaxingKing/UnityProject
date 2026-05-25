@@ -17,7 +17,6 @@ public class UI_ConfirmationDialog : MonoBehaviour
         // 绑定按钮事件
         confirmButton.onClick.AddListener(ClickConfirm);
         cancelButton.onClick.AddListener(CloseDialog);
-        dialogPanel.SetActive(false); // 默认隐藏
     }
 
     // 核心：打开弹窗，并传入“确认时要做什么”

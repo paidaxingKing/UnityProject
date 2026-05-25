@@ -12,7 +12,7 @@ public class Entity_Health : MonoBehaviour,IDamageable
     private Entity_VFX entityVFX;
     private Entity entity;
     private Slider healthBar;
-    private Entity_Stats entityStats;
+    [SerializeField] private Entity_Stats entityStats;
     private Entity_DropManager dropManager;
 
     [SerializeField] protected float currentHp;
@@ -28,6 +28,7 @@ public class Entity_Health : MonoBehaviour,IDamageable
 
     protected virtual void Awake()
     {
+
         entityVFX = GetComponent<Entity_VFX>();
         entity = GetComponent<Entity>();
         healthBar = GetComponentInChildren<Slider>();

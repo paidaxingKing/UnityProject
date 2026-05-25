@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public class FileDataHandler : MonoBehaviour
+public class FileDataHandler
 {
     private string fullPath;//游戏数据存储位置
     private bool encryptData;//encrypt加密
@@ -12,6 +12,7 @@ public class FileDataHandler : MonoBehaviour
     {
         fullPath = Path.Combine(dataDirPath, dataFileName);//注意参数不能写反，先是目录名再是文件名
         this.encryptData = encryptData;
+        Debug.Log(fullPath);
     }
 
     public void SaveData(GameData gameData)

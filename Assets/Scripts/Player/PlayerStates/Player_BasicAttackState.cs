@@ -18,6 +18,7 @@ public class Player_BasicAttackState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        player.skillManager.sword.FlySwordWithAttack();
         comboAttackQueued = false;
 
         ResetComboIndexIfNeeded();

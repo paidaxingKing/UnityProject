@@ -19,6 +19,7 @@ public class Player_FallState : Player_AirState
          
         if (player.groundDetected)
         {
+            Player.instance.sfx.PlayLand();
             stateMachine.ChangeState(player.idleState);
         }
 

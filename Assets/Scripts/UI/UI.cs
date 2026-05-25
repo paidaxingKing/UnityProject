@@ -2,9 +2,12 @@ using UnityEngine;
 
 public class UI : MonoBehaviour
 {
-    [SerializeField] private GameObject[] uiElements;
+    public static UI instance;
 
+    [SerializeField] private GameObject[] uiElements;
     public bool alternativeInput { get; private set; }
+
+    #region UI_Elements
     private PlayerInputSet input;
 
     public UI_SkillToolTip skillToolTip { get; private set; }
@@ -18,11 +21,18 @@ public class UI : MonoBehaviour
 
     public UI_Options optionsUI { get; private set; }
 
+    public UI_DeathScreen deathScreenUI { get; private set; }
+
+    public UI_FadeScreen fadeScreenUI { get; private set; }
+    #endregion
+
     private bool skillTreeEnabled;
     private bool inventoryEnabled;
 
     private void Awake()//组件被禁用Awake仍会执行，但是如果是整个 GameObject被禁用，则不会执行Awake
     {
+        instance = this;
+
         skillToolTip = GetComponentInChildren<UI_SkillToolTip>();
         itemToolTip = GetComponentInChildren<UI_ItemToolTip>();
         statToolTip = GetComponentInChildren<UI_StatToolTip>();
@@ -30,24 +40,38 @@ public class UI : MonoBehaviour
         skillTreeUI = GetComponentInChildren<UI_SkillTree>(true);//设置为true，则即使组件被关闭了，也能找到该组件
         inventoryUI = GetComponentInChildren<UI_Inventory>(true);
         optionsUI = GetComponentInChildren<UI_Options>(true);
+        deathScreenUI = GetComponentInChildren<UI_DeathScreen>(true);
         confirmationDialogUI = GetComponentInChildren<UI_ConfirmationDialog>(true);
+        fadeScreenUI = GetComponentInChildren<UI_FadeScreen>(true);
         skillTreeUI.InitializeUI_Tree();
     }
 
+    public void OpenDeathScreenUI()
+    {
+        SwitchTo(deathScreenUI.gameObject);
+        input.Disable();
+    }
 
-
-    public void OpenOptionsUI()
+    private void SwitchTo(GameObject objectToSwicth)
     {
         foreach (var element in uiElements)
         {
             element.gameObject.SetActive(false);
         }
 
+        objectToSwicth.SetActive(true);
+    }
+
+
+    public void OpenOptionsUI()
+    {
         HideAllTips();
         StopPlayerControls(true);
+
+        SwitchTo(optionsUI.gameObject);
+
         skillTreeEnabled = false;
         inventoryEnabled = false;
-        optionsUI.gameObject.SetActive(true);
     }
 
     public void SwitchToInGameUI()
@@ -133,7 +157,7 @@ public class UI : MonoBehaviour
     {
         skillTreeUI.transform.SetAsLastSibling();
         SetAllTips();
-
+        fadeScreenUI.transform.SetAsLastSibling();
 
         skillTreeEnabled = !skillTreeEnabled;
         skillTreeUI.gameObject.SetActive(skillTreeEnabled);
@@ -151,6 +175,7 @@ public class UI : MonoBehaviour
         }
         inventoryUI.transform.SetAsLastSibling();
         SetAllTips();
+        fadeScreenUI.transform.SetAsLastSibling();
 
         inventoryEnabled = !inventoryEnabled;
         inventoryUI.gameObject.SetActive(inventoryEnabled);

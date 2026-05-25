@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 1189298428320259566}
   - component: {fileID: 5136085689569550477}
   - component: {fileID: 8015869706873859555}
+  - component: {fileID: 3359935257901443522}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -234,6 +235,7 @@ Transform:
   - {fileID: 3524206600232878030}
   - {fileID: 3224598823207555090}
   - {fileID: 115629841424937435}
+  - {fileID: 3409585607067327123}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1604233815835498620
@@ -250,6 +252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   entity_Health: {fileID: 0}
   entity_Stats: {fileID: 0}
+  entity_SFX: {fileID: 0}
   groundCheckDistance: 1.54
   wallCheckDistance: 0.45
   whatIsGround:
@@ -258,6 +261,7 @@ MonoBehaviour:
   groundCheck: {fileID: 7742805711159827101}
   primaryWallCheck: {fileID: 3336345913948254232}
   secondaryWallCheck: {fileID: 3524206600232878030}
+  ui: {fileID: 0}
   combat: {fileID: 0}
   attackVelocity:
   - {x: 3, y: 1.5}
@@ -554,6 +558,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cea96c798d213649945d6e1b160180f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player_Health
+  entityStats: {fileID: 0}
   currentHp: 0
   isDead: 0
   knockbackPower: {x: 1.5, y: 2.5}
@@ -561,6 +566,155 @@ MonoBehaviour:
   knockbackDuration: 0.2
   heavyKnockbackDuration: 0.5
   heavyDamageThreshold: 0.3
+--- !u!114 &3359935257901443522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5568189309859659532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923bb5d94f9acbe4cb27bb0708e8cb39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player_SFX
+  attackHit: player_attackHit
+  attackMiss: player_attackMiss
+  soundDistance: 0.01
+  showGizmos: 0
+  dash: player_dash
+  jump: player_jump
+  land: player_land
+  flyingSword: player_flyingSword
+--- !u!1 &6389257116835945066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3409585607067327123}
+  - component: {fileID: 9059455467420456104}
+  m_Layer: 7
+  m_Name: Player_AudioSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3409585607067327123
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6389257116835945066}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7742805711159827101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &9059455467420456104
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6389257116835945066}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7455059907233631943
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,6 +727,7 @@ GameObject:
   - component: {fileID: 3253237224061451665}
   - component: {fileID: 137998602425983664}
   - component: {fileID: 7975779169512603284}
+  - component: {fileID: 1045962960195576545}
   m_Layer: 7
   m_Name: Skills_Holder
   m_TagString: Untagged
@@ -678,6 +833,37 @@ MonoBehaviour:
   isCharging: 0
   shardExistDuration: 10
   savedHealthPercent: 0
+--- !u!114 &1045962960195576545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7455059907233631943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdfa7779f5b129a49bb998e1fcd28d9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Skill_Sword
+  damageScaleData:
+    physical: 1
+    elemental: 1
+    chillDuration: 3
+    chillSlowMultiplier: 0.3
+    burnDuration: 3
+    burnDamageScale: 1
+    shockDuration: 3
+    shockDamageScale: 1
+    shockCharge: 0.4
+  skillType: 1
+  upgradeType: 0
+  cooldown: 2
+  swordPrefab: {fileID: 6891825027613590786, guid: 2153b6c366f2de540957be9cd90e12da, type: 3}
+  maxSpeed: 100
+  acceleration: 200
+  stuckSwords: []
+  maxSword: 5
+  currentSword: 0
 --- !u!1 &9011542053645471422
 GameObject:
   m_ObjectHideFlags: 0

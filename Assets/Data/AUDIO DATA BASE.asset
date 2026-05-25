@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e84955c391a4684409b11c12b42e0a60, type: 3}
+  m_Name: AUDIO DATA BASE
+  m_EditorClassIdentifier: Assembly-CSharp::Audio_DataBaseSO
+  player:
+  - audioName: player_attackHit
+    clips:
+    - {fileID: 8300000, guid: ab3ada967b6ee464f8ee9f6610ab3a5a, type: 3}
+    - {fileID: 8300000, guid: b654293e0833c8642bd6601a894cbef7, type: 3}
+    - {fileID: 8300000, guid: 9d162f61cede2974fbcaa2ee0d49871a, type: 3}
+    maxVolume: 1
+  - audioName: player_attackMiss
+    clips:
+    - {fileID: 8300000, guid: 483d7d581c2596b44800ff6a433b06b2, type: 3}
+    - {fileID: 8300000, guid: d28d071508148864a89617c0b8f1073b, type: 3}
+    - {fileID: 8300000, guid: f6b116e6aa4ce9345875f65b7dcd1f89, type: 3}
+    maxVolume: 1
+  - audioName: player_dash
+    clips:
+    - {fileID: 8300000, guid: 9abeb5407399f90458b4af43df8d226b, type: 3}
+    maxVolume: 1
+  - audioName: player_jump
+    clips:
+    - {fileID: 8300000, guid: 002d4e98f1e60424ebd5c9bef6764428, type: 3}
+    maxVolume: 1
+  - audioName: player_land
+    clips:
+    - {fileID: 8300000, guid: 5cec0e7ed5daf0c48bfb220cde0c5efc, type: 3}
+    maxVolume: 1
+  - audioName: player_flyingSword
+    clips:
+    - {fileID: 8300000, guid: f6b116e6aa4ce9345875f65b7dcd1f89, type: 3}
+    maxVolume: 0.8
+  uiAduio:
+  - audioName: button_click
+    clips:
+    - {fileID: 8300000, guid: 9f602bde36a7dde409e5d454828114f5, type: 3}
+    maxVolume: 1
+  mainMenuMusic:
+  - audioName: player_mainMenu
+    clips:
+    - {fileID: 8300000, guid: 0f5611dd1d1033e46ac12d5b440841ee, type: 3}
+    - {fileID: 8300000, guid: df7e539a6d3ef3243a90cb5f3b56221a, type: 3}
+    maxVolume: 1
+  levelMusic:
+  - audioName: player_level0
+    clips:
+    - {fileID: 8300000, guid: 966b9ba518ca20a4ab458eb14522a24f, type: 3}
+    maxVolume: 1
+  - audioName: player_level1
+    clips:
+    - {fileID: 8300000, guid: cdc47d915c204624cad708506740e7c8, type: 3}
+    maxVolume: 1
+  - audioName: player_level2
+    clips:
+    - {fileID: 8300000, guid: 0bc50d9c73d490447894fccb15f140d6, type: 3}
+    maxVolume: 1

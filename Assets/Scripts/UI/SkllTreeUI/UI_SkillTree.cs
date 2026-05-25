@@ -74,6 +74,7 @@ public class UI_SkillTree : MonoBehaviour,ISaveable
 
     public void LoadData(GameData data)
     {
+        Debug.Log(data.skillPoints);
         skillPoints = data.skillPoints;
 
         foreach (var node in allTreeNodes)
